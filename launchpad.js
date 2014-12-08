@@ -2,15 +2,13 @@
 launchpad.js by K.Aoki(Prily - prhyzmica)
 
 #usage
-	1.set to LP
-	LP.set(keyname,type,position,colormap)
+	1.add obj to LP
+	LP.add(page,keyname,type,position,colormap)
 
-	keyname: name of key
-	type:		"button","toggle","selector",etc
-	position:	button position data
-	colormap:	light color
+	keyname: name of key(unique)
+	type:		function
+	position:	button position data(val or array)
 
-	2.reset
 
 #type
 	button)
@@ -25,6 +23,9 @@ launchpad.js by K.Aoki(Prily - prhyzmica)
 	position:	[button1,button2,...]
 	colormap:	[off,on]
 	
+	counter)
+	selector, but display only
+	
 	fader)
 	position: [zero_button,position_gap,length]
 	colormap:	[off,on]
@@ -32,6 +33,9 @@ launchpad.js by K.Aoki(Prily - prhyzmica)
 	matrix)
 	position: [upper_left_button_row,upper_left_button_column,width,height]
 	colormap:	[off,on]
+	
+	matrix_display)
+	matrix, but display only
 
 
 #colormap
@@ -59,220 +63,101 @@ launchpad.js by K.Aoki(Prily - prhyzmica)
 			Red 1
 */
 
-//-----setup(user)-----
-var Namemap = {}
-var Myset = function(){
-	var addobj = function(page,keyname,type,pos,color,ex){
-		Namemap[keyname]=page
-		LP[page].addobj(keyname,type,pos,color)
-	}
-	
-	//object1
-	addobj(0,"o1mesh","toggle",0,[1,51])
-	addobj(0,"o1point","toggle",1,[1,51])
-	addobj(0,"o1camera","button",2,[16,48])
-	addobj(0,"o1preset","button",3,[16,48])
-	addobj(0,"o1color","toggle",4,[1,51])
-	addobj(0,"o1auto","toggle",7,[1,3])
-	
-	//object2
-	addobj(0,"o2enable","toggle",16,[1,51])
-	addobj(0,"o2mode","selector",[17,18,19],[17,49])
-	addobj(0,"o2num","selector",[20,21,22],[17,49])
-	addobj(0,"o2auto","toggle",23,[1,3])
-	
-	//beat
-	addobj(0,"b_in","button",104,[1,3])
-	addobj(0,"b_minus","button",102,[1,3])
-	addobj(0,"b_plus","button",103,[1,3])
-	addobj(0,"b_rst","button",96,[1,3])
-	addobj(0,"b_disp","counter",[112,113,114,115,116,117,118,119],[0,32])
-	
-	//fader
-	addobj(1,"f0","fader",[112,-16,8],[16,51],"H")
-	addobj(1,"f1","fader",[113,-16,8],[16,51],"H")
-	addobj(1,"f2","fader",[114,-16,8],[16,51],"H")
-	addobj(1,"f3","fader",[115,-16,8],[16,51],"H")
-	addobj(1,"f4","fader",[116,-16,8],[16,51],"H")
-	addobj(1,"f5","fader",[117,-16,8],[16,51],"H")
-	addobj(1,"f6","fader",[118,-16,8],[16,51],"H")
-	addobj(1,"f7","fader",[119,-16,8],[16,51],"H")
 
-	
-	//matrix
-	addobj(2,"mt1","matrix_toggle",[0,0,8,8],[0,3])
-	addobj(3,"mdisp","matrix_display",[0,0,8,8],[0,3])
-}
-
-
-//-----io-----
-
-inlets = 3
+//-----common setting-----
+inlets = 1
 outlets = 3
-/*
-in0  = notein
-in1  = midiin(CC)
-in2  = display
-out0 = data
-out1 = noteout
-out2 = midiout(CC)
-*/
-
+autowatch = 1
 
 //-----LP-----
-
-var LP = []
-var Page = 0 //0..7
-var LPpage = function(pagenum) {
-	this.pagenum = pagenum
-	this.keyMap = []
-	this.objList = {}
-	this.thisLPpage = this
-	
-	//all reset
-	//cell,A~H
-	for (var r=0; r<8; r++) {
-		for (var c=0; c<9; c++) {
-			var position = r*16+c
-			var k = new emptyKey(position)
-			this.keyMap[position] = k
+var Page = 0
+var _LP = function(){
+	//init
+	this.map = {}
+	this.map.objList = {}
+	this.map.posList = new Array(8)
+	for (var i=0; i<8; i++) {
+		this.map.posList[i] = new Array(8*9)
+		for (var r=0; r<8; r++) {
+			for (var c=0; c<9; c++) {
+				var position = r*16+c
+				var o = new empty(position)
+				this.map.posList[i][position] = o
+			}
 		}
 	}
-
 }
-LPpage.prototype = {
-	addobj : function(keyname,type,position,colormap,ex){
-		switch (type) {
-			case "button" :
-				var k = new buttonKey(keyname,position,colormap,this.thisLPpage)
-				this.objList[keyname] = k
-				this.keyMap[position] = k
-				break
-			case "toggle" :
-				var k = new toggleKey(keyname,position,colormap,this.thisLPpage)
-				this.objList[keyname] = k
-				this.keyMap[position] = k
-				break
-			case "selector" :
-				var k = new selectorKeys(keyname,position,colormap,this.thisLPpage)
-				this.objList[keyname] = k
-				for (var i=0; i<position.length; i++) {
-					this.keyMap[position[i]] = k
-				}
-				break
-			case "fader" :
-				var position2 = new Array()
-				for (var i=0; i<position[2]; i++) {
-					position2[i] = position[0]+position[1]*i
-				}
-				var k = new faderKeys(keyname,position2,colormap,this.thisLPpage)
-				this.objList[keyname] = k
-				for (var i=0; i<position2.length; i++) {
-					this.keyMap[position2[i]] = k
-				}
-				break
-			case "counter" :
-				var k = new counterKeys(keyname,position,colormap,this.thisLPpage)
-				this.objList[keyname] = k
-				for (var i=0; i<position.length; i++) {
-					this.keyMap[position[i]] = k
-				}
-				break
-			case "matrix_toggle" :
-				var k = new matrix_toggleKeys(keyname,position,colormap,this.thisLPpage)
-				this.objList[keyname] = k
-				for (var r=0; r<position[2]; r++) {
-					for (var c=0; c<position[3]; c++) {
-						this.keyMap[(position[0]+r)*16+(position[1]+c)] = k
-					}
-				}
-				break
-			case "matrix_display" :
-				var k = new matrix_displayKeys(keyname,position,colormap,this.thisLPpage)
-				this.objList[keyname] = k
-				for (var r=0; r<position[2]; r++) {
-					for (var c=0; c<position[3]; c++) {
-						this.keyMap[(position[0]+r)*16+(position[1]+c)] = k
-					}
-				}
-				break
+_LP.prototype = {
+	add : function(page,keyname,type,position,colormap,option){
+		var o = new type(this.map,page,keyname,position,colormap,option)
+	},
+	setPage : function(page) {
+		if (page<0 || 7<page) {
+			Page = 0
+			post("ERR : invalid pagenumber. pagenumber is 0~7\n")
+		}else{
+			Page = page
+			post("Page set "+Page+"\n")
 		}
+		outlet(2,[0,0]) //hard reset
+		//pagetab lighting
+		for (var i=0; i<8; i++) {
+			outlet(2,[0,104+i])
+		}
+		outlet(2,[50,104+Page])
+		
+		//flash
+		LP.flash(Page)
 	},
 	push : function(position,velocity) {
-		this.keyMap[position].push(velocity,position)
+		this.map.posList[Page][position].push(velocity,position)
 	},
-	flash : function() {
-		for each (var o in this.objList) {
-			o.flash()
+	flash : function(page) {
+		for each (var o in this.map.objList) {
+			if(o.page==page) o.flash()
 		}
 	},
 	set : function(keyname,data) {
-		this.objList[keyname].set(data)
+		if (keyname in this.map.objList) {
+			post("ERR : invalid keyname "+keyname+" \n")
+		}else{
+			this.map.objList[keyname].set(data)
+		}
 	}
 }
 
-//-----mapping-----
-
-function mapping() {
-	//port set
-	
-	
-	//hard reset
-	outlet(2,[176,0,0])
-	
-	//new LP
-	for (var i=0; i<8; i++) {
-		LP[i] = new LPpage(i)
-	}
-
-	//1~8
-	for (var i=0; i<8; i++) {
-		outlet(2,[176,104+i,0])
-	}
-	
-	//page set
-	Page = 0
-	outlet(2,[176,104,127])
-	
-	Myset()
-	
-	//flash
-	LP[0].flash()
-		
-	post("LP setup done!\n")
-}
-	
 
 
-//-----Keys-----
-
+//-----key objects-----
 //empty
-var emptyKey = function(position) {
+var empty = function(position) {
 	this.keyname = "(none)"
 	this.position = position
 	this.colormap = [0,16]
 }
-emptyKey.prototype = {
+empty.prototype = {
 	push : function(velocity) {
 		if (velocity==127) {
-			outlet(0,[this.keyname,1]) //data
+			outlet(0,[this.keyname,this.position]) //data
 			outlet(1,[this.position,this.colormap[1]]) //noteout
 		}else{
 			outlet(1,[this.position,this.colormap[0]]) //noteout
 		}
 	},
-	flash : function(){},
-	set : function(data){}
+	flash : function(){}
 }
 
 //button
-var buttonKey = function(keyname,position,colormap,thisLPpage) {
+var button = function(map,page,keyname,position,colormap) {
+	this.map = map
+	this.page = page
 	this.keyname = keyname
 	this.position = position
 	this.colormap = colormap
-	this.thisLPpage = thisLPpage
+	map.objList[keyname] = this
+	map.posList[page][position] = this
 }
-buttonKey.prototype = {
+button.prototype = {
 	push : function(velocity) {
 		if (velocity==127) {
 			outlet(0,[this.keyname,1]) //data
@@ -282,21 +167,23 @@ buttonKey.prototype = {
 		}
 	},
 	flash : function() {
-		//outlet(0,[this.keyname,0]) //data
 		outlet(1,[this.position,this.colormap[0]]) //noteout
 	},
 	set : function(data) {}
 }
 
 //toggle
-var toggleKey = function(keyname,position,colormap,thisLPpage) {
+var toggle = function(map,page,keyname,position,colormap) {
+	this.map = map
+	this.page = page
 	this.keyname = keyname
 	this.position = position
-	this.data = 0
 	this.colormap = colormap
-	this.thisLPpage = thisLPpage
+	this.data = 0
+	map.objList[keyname] = this
+	map.posList[page][position] = this
 }
-toggleKey.prototype = {
+toggle.prototype = {
 	push : function(velocity) {
 		if (velocity==127) {
 			if (this.data==0) this.data = 1
@@ -313,25 +200,29 @@ toggleKey.prototype = {
 	},
 	set : function(data) {
 		this.data = data[0]
-		if(Page==this.thisLPpage.pagenum) {this.flash()}
+		if(Page==this.Page) {this.flash();}
 	}
 }
 
 //selector
-var selectorKeys = function(keyname,positions,colormap,thisLPpage) {
+var selector = function(map,page,keyname,position,colormap) {
+	this.map = map
+	this.page = page
 	this.keyname = keyname
-	this.positions = positions
+	this.position = position
 	this.colormap = colormap
-	this.thisLPpage = thisLPpage
 	this.data = 0
-	this.mem = 0
+	map.objList[keyname] = this
+	for (var i=0; i<position.length; i++) {
+		map.posList[page][position[i]] = this
+	}
 }
-selectorKeys.prototype = {
+selector.prototype = {
 	push : function(velocity,position) {
 		if (velocity==127) {
-			outlet(1,[this.positions[this.data],this.colormap[0]]) //noteout	
-			for (var i=0; i<this.positions.length; i++) {
-				if (this.positions[i]==position) {
+			outlet(1,[this.position[this.data],this.colormap[0]]) //noteout	
+			for (var i=0; i<this.position.length; i++) {
+				if (this.position[i]==position) {
 					this.data = i
 					outlet(0,[this.keyname,this.data]) //data
 					outlet(1,[position,this.colormap[1]]) //noteout
@@ -340,20 +231,20 @@ selectorKeys.prototype = {
 		}
 	},
 	flash : function() {
-		for (var i=0; i<this.positions.length; i++) {
+		for (var i=0; i<this.position.length; i++) {
 			if (this.data==i) {
 				outlet(0,[this.keyname,this.data]) //data
-				outlet(1,[this.positions[i],this.colormap[1]]) //noteout
+				outlet(1,[this.position[i],this.colormap[1]]) //noteout
 			}else{
-				outlet(1,[this.positions[i],this.colormap[0]]) //noteout
+				outlet(1,[this.position[i],this.colormap[0]]) //noteout
 			}
 		}
 	},
 	set : function(data) {
-		if(Page==this.thisLPpage.pagenum) {
-			outlet(1,[this.positions[this.data],this.colormap[0]]) //noteout
+		if(Page==this.Page) {
+			outlet(1,[this.position[this.data],this.colormap[0]]) //noteout
 			this.data = data[0]
-			outlet(1,[this.positions[this.data],this.colormap[1]]) //noteout
+			outlet(1,[this.position[this.data],this.colormap[1]]) //noteout
 		}else{
 			this.data = data[0]
 		}
@@ -361,99 +252,98 @@ selectorKeys.prototype = {
 }
 
 //counter
-var counterKeys = function(keyname,positions,colormap,thisLPpage) {
+var counter = function(map,page,keyname,position,colormap) {
+	this.map = map
+	this.page = page
 	this.keyname = keyname
-	this.positions = positions
+	this.position = position
 	this.colormap = colormap
-	this.thisLPpage = thisLPpage
 	this.data = 0
-	this.mem = 0
+	map.objList[keyname] = this
 }
-counterKeys.prototype = {
+counter.prototype = {
 	push : function(velocity,position) {},
-	flash : function() {
-		for (var i=0; i<this.positions.length; i++) {
-			if (this.data==i) {
-				outlet(0,[this.keyname,this.data]) //data
-				outlet(1,[this.positions[i],this.colormap[1]]) //noteout
-			}else{
-				outlet(1,[this.positions[i],this.colormap[0]]) //noteout
-			}
-		}
-	},
-	set : function(data) {
-		if(Page==this.thisLPpage.pagenum) {
-			outlet(1,[this.positions[this.data],this.colormap[0]]) //noteout
-			this.data = data[0]
-			outlet(1,[this.positions[this.data],this.colormap[1]]) //noteout
-		}else{
-			this.data = data[0]
-		}
-	}
+	flash : selector.prototype.flash,
+	set : selector.prototype.set
 }
 
 //fader
-var faderKeys = function(keyname,positions,colormap,thisLPpage) {
+var fader = function(map,page,keyname,position,colormap) {
+	this.map = map
+	this.page = page
 	this.keyname = keyname
-	this.positions = positions
 	this.colormap = colormap
-	this.thisLPpage = thisLPpage
 	this.data = 0
-	this.mem = 0
+	
+	this.position = new Array()
+	for (var i=0; i<position[2]; i++) {
+		this.position[i] = position[0]+position[1]*i
+	}
+	map.objList[keyname] = this
+	for (var i=0; i<this.position.length; i++) {
+		map.posList[page][this.position[i]] = this
+	}
 }
-faderKeys.prototype = {
+fader.prototype = {
 	push : function(velocity,position) {
 		if (velocity==127) {
 			var match = 0
-			for (var i=0; i<this.positions.length; i++) {
-				if (this.positions[i]==position) {
+			for (var i=0; i<this.position.length; i++) {
+				if (this.position[i]==position) {
 					match = 1
 					this.data = i
-					outlet(0,[this.keyname, this.data*(1.0/(this.positions.length-1)) ]) //data
-					outlet(1,[this.positions[i],this.colormap[1]]) //noteout
+					outlet(0,[this.keyname, this.data*(1.0/(this.position.length-1)) ]) //data
+					outlet(1,[this.position[i],this.colormap[1]]) //noteout
 				}else if (match==0) {
-					outlet(1,[this.positions[i],this.colormap[1]])
+					outlet(1,[this.position[i],this.colormap[1]])
 				}else{
-					outlet(1,[this.positions[i],this.colormap[0]]) //noteout
+					outlet(1,[this.position[i],this.colormap[0]]) //noteout
 				}
 			}
 		}
 	},
 	flash : function() {
 		var match = 0
-		for (var i=0; i<this.positions.length; i++) {
+		for (var i=0; i<this.position.length; i++) {
 			if (i==this.data) {
 				match = 1
-				outlet(0,[this.keyname, this.data*(1.0/(this.positions.length-1)) ]) //data
-				outlet(1,[this.positions[i],this.colormap[1]]) //noteout
+				outlet(0,[this.keyname, this.data*(1.0/(this.position.length-1)) ]) //data
+				outlet(1,[this.position[i],this.colormap[1]]) //noteout
 			}else if (match==0) {
-				outlet(1,[this.positions[i],this.colormap[1]])
+				outlet(1,[this.position[i],this.colormap[1]])
 			}else{
-				outlet(1,[this.positions[i],this.colormap[0]]) //noteout
+				outlet(1,[this.position[i],this.colormap[0]]) //noteout
 			}
 		}
 	},
 	set : function(data) {
-		var d = Math.round(data[0] / (1.0/(this.positions.length-1)))
+		var d = Math.round(data[0] / (1.0/(this.position.length-1)))
 		this.data = d
-		if(Page==this.thisLPpage.pagenum) {this.flash()}
+		if(Page==this.Page) {this.flash()}
 	}
 }
 
-//matrix_toggle
-var matrix_toggleKeys = function(keyname,position,colormap,thisLPpage) {
+//matrix
+var matrix = function(map,page,keyname,position,colormap) {
+	this.map = map
+	this.page = page
 	this.keyname = keyname
 	this.position = position
 	this.colormap = colormap
-	this.thisLPpage = thisLPpage
 	this.data = []
-	for (var r=0; r<this.position[2]; r++) {
-		for (var c=0; c<this.position[3]; c++) {
-			this.data[(this.position[0]+r)*16+(this.position[1]+c)] = {val:0, colmun:c, row:r}
+	for (var r=0; r<position[2]; r++) {
+		for (var c=0; c<position[3]; c++) {
+			this.data[(position[0]+r)*16+(position[1]+c)] = {val:0, colmun:c, row:r}
+		}
+	}
+	map.objList[keyname] = this
+	for (var r=0; r<position[2]; r++) {
+		for (var c=0; c<position[3]; c++) {
+			map.posList[page][(position[0]+r)*16+(position[1]+c)] = this
 		}
 	}
 }
-matrix_toggleKeys.prototype = {
+matrix.prototype = {
 	push : function(velocity,position) {
 		if (velocity==127) {
 			if (this.data[position].val == 0) this.data[position].val = 1
@@ -475,7 +365,7 @@ matrix_toggleKeys.prototype = {
 	set : function(data) {
 		//data = [colmun,row,data]
 		var pos = (this.position[0]+data[1])*16+(this.position[1]+data[0])
-		if(Page==this.thisLPpage.pagenum) {
+		if(Page==this.Page) {
 			if (this.data[pos].val == 0) this.data[pos].val = 1
 			else this.data[pos].val = 0
 			outlet(0,[this.keyname,this.data[pos].colmun,this.data[pos].row,this.data[pos].val]) //data
@@ -487,93 +377,83 @@ matrix_toggleKeys.prototype = {
 }
 
 //matrix_display
-var matrix_displayKeys = function(keyname,position,colormap,thisLPpage) {
+var matrix_display = function(map,page,keyname,position,colormap) {
+	this.map = map
+	this.page = page
 	this.keyname = keyname
 	this.position = position
 	this.colormap = colormap
-	this.thisLPpage = thisLPpage
 	this.data = [] //access: data[position]
 	for (var r=0; r<this.position[2]; r++) {
 		for (var c=0; c<this.position[3]; c++) {
 			this.data[(this.position[0]+r)*16+(this.position[1]+c)] = {val:0, colmun:c, row:r}
 		}
 	}
+	map.objList[keyname] = this
 }
-matrix_displayKeys.prototype = {
+matrix_display.prototype = {
 	push : function(velocity,position) {},
-	flash : function() {
-			this.data.forEach(
-				function(value,index,arr){
-					outlet(1,[index,this.colormap[value.val]]) //noteout
-			},this
-		)
-	},
-	set : function(data) {
-		//data = [colmun,row,data]
-		var pos = (this.position[0]+data[1])*16+(this.position[1]+data[0])
-		if(Page==this.thisLPpage.pagenum) {
-			if (this.data[pos].val == 0) this.data[pos].val = 1
-			else this.data[pos].val = 0
-			outlet(0,[this.keyname,this.data[pos].colmun,this.data[pos].row,this.data[pos].val]) //data
-			outlet(1,[pos,this.colormap[this.data[pos].val]]) //noteout
-		}else{
-			this.data[pos].val = data[2]
-		}
-	}
+	flash : matrix.prototype.flash,
+	set : matrix.prototype.set
 }
 
 
-//-----common-----
 
-function loadbang() {
-	mapping()
+
+
+
+
+
+
+
+
+//-----user setting-----
+//include ("LPinit.js")
+
+
+//-----functions-----
+var LP = new _LP
+
+function init(){
+	LP = new _LP
+	Page = 0
+	LP.add(0,"b1",button,0,[1,51])
+	LP.add(0,"t1",toggle,1,[1,51])
+	LP.add(0,"s1",selector,[17,18,19],[1,51])
+	LP.add(0,"c1",counter,[112,113,114,115,116,117,118,119],[0,32])
+	LP.add(1,"f1",fader,[112,-16,8],[16,51])
+	LP.add(1,"f2",fader,[113,-16,8],[16,51])
+	LP.add(2,"m1",matrix,[0,0,8,8],[0,3])
+	LP.add(3,"md1",matrix_display,[0,0,8,8],[0,3])
+}
+function set(){
+	var keyname = arguments[0]
+	var data = [arguments[1],arguments[2],arguments[3]]
+	LP.set(keyname,data)
+}
+function setPage(){
+	var page = arguments[0]
+	LP.setPage(page)
+}
+function note(){
+	var position = arguments[0]
+	var velocity = arguments[1]
+	LP.push(position,velocity)
+}
+function ctl(){
+	var position = arguments[1];
+	var velocity = arguments[0];
+	if (velocity==127) LP.setPage(position-104)
+}
+function loadbang(){
+	reset()
+}
+function reset(){
+	init()
+	LP.setPage(0)
+	post("LP setup done!\n")
 }
 
-function bang() {}
-function msg_int() {}
-function msg_float() {}
 
-function reset() {
-	mapping()
-}
-
-function anything() {
-	if (inlet==0) { //notein
-		var position = arguments[0]
-		var velocity = arguments[1]
-		LP[Page].push(position,velocity)
-	}else if (inlet==1) { //midiin(CC)
-		var position = arguments[0]
-		var velocity = arguments[1]
-		Page = position-104
-		if (Page<0 || 7<Page) {
-			Page = 0
-			post("ERR : invalid pagenumber\n")
-		}
-		if (velocity==127) {			
-			//hard reset
-			outlet(2,[176,0,0])
-			
-			//pagetab lighting
-			for (var i=0; i<8; i++) {
-				outlet(2,[176,104+i,0])
-			}
-			outlet(2,[176,position,50])
-			
-			//all flash
-			LP[Page].flash()
-			
-			post("Page set "+Page+"\n")
-		}
-	}else if (inlet==2) { // set
-		//keyname,[data]
-		var data = [arguments[1],arguments[2],arguments[3]]
-		var keyname = String(arguments[0])
-		if (arguments[0] in Namemap) {
-			LP[Namemap[arguments[0]]].set(arguments[0],data)
-		}else{
-			post("ERR : invalid keyname "+arguments[0]+" \n")
-		}
-	}
-}
-	
+post("launchpad.js compiled.\n")
+reset()
