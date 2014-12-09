@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 100.0, 81.0, 1228.0, 649.0 ],
+		"rect" : [ 325.0, 223.0, 1228.0, 578.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -38,12 +38,25 @@
 		"subpatcher_template" : "",
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-2",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "bang" ],
+					"patching_rect" : [ 895.0, 349.0, 60.0, 22.0 ],
+					"style" : "",
+					"text" : "loadbang"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-6",
 					"maxclass" : "button",
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 923.0, 459.0, 24.0, 24.0 ],
+					"patching_rect" : [ 854.0, 454.0, 24.0, 24.0 ],
 					"style" : ""
 				}
 
@@ -55,7 +68,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 780.0, 443.0, 24.0, 24.0 ],
+					"patching_rect" : [ 750.0, 455.0, 24.0, 24.0 ],
 					"style" : ""
 				}
 
@@ -66,7 +79,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 3,
 					"numoutlets" : 0,
-					"patching_rect" : [ 827.0, 615.0, 40.0, 22.0 ],
+					"patching_rect" : [ 810.0, 600.0, 40.0, 22.0 ],
 					"style" : "",
 					"text" : "ctlout"
 				}
@@ -78,7 +91,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 3,
 					"numoutlets" : 0,
-					"patching_rect" : [ 750.0, 600.0, 51.0, 22.0 ],
+					"patching_rect" : [ 746.5, 600.0, 51.0, 22.0 ],
 					"style" : "",
 					"text" : "noteout"
 				}
@@ -91,27 +104,9 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 868.0, 333.0, 37.0, 22.0 ],
+					"patching_rect" : [ 615.0, 380.0, 37.0, 22.0 ],
 					"style" : "",
 					"text" : "reset"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-49",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 492.0, 291.0, 65.0, 22.0 ],
-					"saved_object_attributes" : 					{
-						"filename" : "LPinit.js",
-						"parameter_enable" : 0
-					}
-,
-					"style" : "",
-					"text" : "js LPinit.js"
 				}
 
 			}
@@ -122,39 +117,14 @@
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "", "", "" ],
-					"patching_rect" : [ 711.0, 541.0, 97.0, 22.0 ],
+					"patching_rect" : [ 711.0, 541.0, 90.0, 22.0 ],
 					"saved_object_attributes" : 					{
-						"filename" : "launchpad2.js",
+						"filename" : "launchpad.js",
 						"parameter_enable" : 0
 					}
 ,
 					"style" : "",
-					"text" : "js launchpad2.js"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-44",
-					"maxclass" : "newobj",
-					"numinlets" : 3,
-					"numoutlets" : 0,
-					"patching_rect" : [ 1015.0, 548.245239, 40.0, 22.0 ],
-					"style" : "",
-					"text" : "ctlout"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-39",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "int" ],
-					"patching_rect" : [ 978.0, 418.245239, 42.0, 22.0 ],
-					"style" : "",
-					"text" : "midiin"
+					"text" : "js launchpad.js"
 				}
 
 			}
@@ -165,7 +135,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 835.0, 485.0, 70.0, 22.0 ],
+					"patching_rect" : [ 812.0, 485.0, 70.0, 22.0 ],
 					"style" : "",
 					"text" : "prepend ctl"
 				}
@@ -178,7 +148,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 835.0, 454.0, 36.0, 22.0 ],
+					"patching_rect" : [ 812.0, 454.0, 36.0, 22.0 ],
 					"style" : "",
 					"text" : "pack"
 				}
@@ -191,7 +161,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "int", "int", "int" ],
-					"patching_rect" : [ 835.0, 423.0, 40.0, 22.0 ],
+					"patching_rect" : [ 812.0, 423.0, 40.0, 22.0 ],
 					"style" : "",
 					"text" : "ctlin"
 				}
@@ -242,21 +212,9 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 619.0, 718.245239, 93.0, 22.0 ],
+					"patching_rect" : [ 711.0, 646.245239, 93.0, 22.0 ],
 					"style" : "",
 					"text" : "print @popup 1"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-14",
-					"maxclass" : "button",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 917.0, 571.0, 24.0, 24.0 ],
-					"style" : ""
 				}
 
 			}
@@ -267,7 +225,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 711.0, 337.0, 128.0, 22.0 ],
+					"patching_rect" : [ 895.0, 380.0, 128.0, 22.0 ],
 					"style" : "",
 					"text" : "port \"Launchpad Mini\""
 				}
@@ -435,6 +393,7 @@
 					"destination" : [ "obj-16", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
+					"midpoints" : [ 904.5, 405.0, 720.5, 405.0 ],
 					"source" : [ "obj-12", 0 ]
 				}
 
@@ -444,6 +403,7 @@
 					"destination" : [ "obj-30", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
+					"midpoints" : [ 904.5, 405.0, 821.5, 405.0 ],
 					"source" : [ "obj-12", 0 ]
 				}
 
@@ -453,6 +413,7 @@
 					"destination" : [ "obj-52", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
+					"midpoints" : [ 904.5, 585.0, 756.0, 585.0 ],
 					"source" : [ "obj-12", 0 ]
 				}
 
@@ -462,6 +423,7 @@
 					"destination" : [ "obj-53", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
+					"midpoints" : [ 904.5, 585.0, 819.5, 585.0 ],
 					"source" : [ "obj-12", 0 ]
 				}
 
@@ -508,6 +470,15 @@
 					"disabled" : 0,
 					"hidden" : 0,
 					"source" : [ "obj-19", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-12", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-2", 0 ]
 				}
 
 			}
@@ -630,14 +601,7 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "launchpad2.js",
-				"bootpath" : "/Users/Prily/Dropbox/Develop/Max/Launchpad.js dev",
-				"patcherrelativepath" : ".",
-				"type" : "TEXT",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "LPinit.js",
+				"name" : "launchpad.js",
 				"bootpath" : "/Users/Prily/Dropbox/Develop/Max/Launchpad.js dev",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",

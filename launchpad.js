@@ -1,3 +1,5 @@
+var setting = "LPsetting.js"
+
 /*
 launchpad.js by K.Aoki(Prily - prhyzmica)
 
@@ -408,24 +410,18 @@ matrix_display.prototype = {
 
 
 //-----user setting-----
-//include ("LPinit.js")
+function initialize(){
+	LP = new _LP
+	Page = 0
+	include(setting)
+}
+
 
 
 //-----functions-----
 var LP = new _LP
 
-function init(){
-	LP = new _LP
-	Page = 0
-	LP.add(0,"b1",button,0,[1,51])
-	LP.add(0,"t1",toggle,1,[1,51])
-	LP.add(0,"s1",selector,[17,18,19],[1,51])
-	LP.add(0,"c1",counter,[112,113,114,115,116,117,118,119],[0,32])
-	LP.add(1,"f1",fader,[112,-16,8],[16,51])
-	LP.add(1,"f2",fader,[113,-16,8],[16,51])
-	LP.add(2,"m1",matrix,[0,0,8,8],[0,3])
-	LP.add(3,"md1",matrix_display,[0,0,8,8],[0,3])
-}
+
 function set(){
 	var keyname = arguments[0]
 	var data = [arguments[1],arguments[2],arguments[3]]
@@ -446,10 +442,10 @@ function ctl(){
 	if (velocity==127) LP.setPage(position-104)
 }
 function loadbang(){
-	reset()
+	//reset()
 }
 function reset(){
-	init()
+	initialize()
 	LP.setPage(0)
 	post("LP setup done!\n")
 }

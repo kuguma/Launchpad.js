@@ -1,0 +1,10 @@
+LP.add(0,"b1",button,0,[1,51])
+LP.add(0,"t1",toggle,1,[1,51])
+LP.add(0,"s1",selector,[17,18,19],[1,51])
+LP.add(0,"c1",counter,[112,113,114,115,116,117,118,119],[0,32])
+LP.add(1,"f1",fader,[112,-16,8],[16,51])
+LP.add(1,"f2",fader,[113,-16,8],[16,51])
+LP.add(2,"m1",matrix,[0,0,8,8],[0,3])
+LP.add(3,"md1",matrix_display,[0,0,8,8],[0,3])
+
+post("LPsetting.js included.\n")
