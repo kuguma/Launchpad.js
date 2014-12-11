@@ -1,4 +1,4 @@
-var font_display = function(map,page,keyname,position,colormap) {
+var message_display = function(map,page,keyname,position,colormap) {
 	this.map = map
 	this.page = page
 	this.keyname = keyname
@@ -14,7 +14,7 @@ var font_display = function(map,page,keyname,position,colormap) {
 	}
 }
 
-font_display.prototype = {
+message_display.prototype = {
 	fontdata : [
 		0x00000000, 0x00000000, 0x18181818, 0x00180018, 0x00003636, 0x00000000, 0x367F3636, 0x0036367F, 
 		0x3C067C18, 0x00183E60, 0x1B356600, 0x0033566C, 0x6E16361C, 0x00DE733B, 0x000C1818, 0x00000000, 
@@ -152,7 +152,7 @@ font_display.prototype = {
 		}
 		return code
 	},
-	displayChar : function(charactor,row,column,color) {
+	displayChar : function(charactor,row,column) {
 		var code = this.char2code(charactor)
 		var fmatrix = new Array(8)
 		for (var i=0; i<8; i++){
@@ -174,77 +174,80 @@ font_display.prototype = {
 				var c2 = c-column
 				if (0<=r2 && r2<=7 && 0<=c2 && c2<=7) {
 					//double buffering
-					this.D_Matrix[c2][r2] = fmatrix[c][r] * color;
+					this.D_Matrix[c2][r2] = fmatrix[c][r] * this.colormap[1]
 				}
 			}
 		}
 	},
-	flash : function(data) {},
-	set : function(data) {
-		this.Str = " "+ s + " "
-		this.Pos = [0,0] //mozi,bit
-		post("set "+this.Str+"\n")
-		
-		//reset
-		var r,c,pos
+	flash : function(data) {
 		for (var r=0; r<8; r++){
 			for (var c=0; c<8; c++){
-				this.B_Matrix[c][r] = 0;
-				this.D_Matrix[c][r] = 0;
-				pos = r*16+c;
-				outlet(1,[pos,0]);
+				var pos = r*16+c
+				if (Page==this.page) outlet(1,[pos,this.colormap[0]])
 			}
 		}
 	},
-	update : function (){
+	set : function(data) {
+		var s = data[0]
+		//taskが無名関数を指定した時バグるので直るまでコレで対応
+		if (s=="update") {
+			this.update()
+		}else{
+			this.Str = " "+s+" "
+			this.Pos = [0,0] //mozi,bit
+			post("set "+this.Str+"\n")
+			
+			//reset
+			var r,c,pos
+			for (var r=0; r<8; r++){
+				for (var c=0; c<8; c++){
+					this.B_Matrix[c][r] = 0
+					this.D_Matrix[c][r] = 0
+					var pos = r*16+c
+					if (Page==this.page) outlet(1,[pos,this.colormap[0]])
+				}
+			}
+		}
+	},
+	update : function(){
 		//Buffer erace
-		var r,c,pos
 		for (var r=0; r<8; r++){
 			for (var c=0; c<8; c++){
-				this.B_Matrix[c][r] = this.D_Matrix[c][r];
-				this.D_Matrix[c][r] = 0;
+				this.B_Matrix[c][r] = this.D_Matrix[c][r]
+				this.D_Matrix[c][r] = this.colormap[0]
 			}
 		}
 		
 		//draw to Buffer
-		//var palette = [51,48,3];
-		//var tempcolor = palette[Math.floor(Math.random()*3)];
-		var tempcolor = 51
-		displayChar(this.Str.charAt(this.Pos[0]),0,this.Pos[1],tempcolor)
+		this.displayChar(this.Str.charAt(this.Pos[0]),0,this.Pos[1])
 		if (this.Pos[1]!=0) {
-			displayChar(this.Str.charAt(this.Pos[0]+1),0,this.Pos[1]-8,tempcolor)
+			this.displayChar(this.Str.charAt(this.Pos[0]+1),0,this.Pos[1]-8)
 		}
 		
 		//smart draw
 		var r,c,pos
 		for (var r=0; r<8; r++){
 			for (var c=0; c<8; c++){
-				if(B_Matrix[c][r]!==D_Matrix[c][r]) {
-					pos = r*16+c;
-					outlet(1,[pos,D_Matrix[c][r]]);
+				if(this.B_Matrix[c][r]!==this.D_Matrix[c][r]) {
+					var pos = r*16+c;
+					if (Page==this.page) outlet(1,[pos,this.D_Matrix[c][r]])
 				}
 			}
 		}
 		
 		//counter++ and check
 		if(this.Pos[1]==7) {
-			this.Pos[0]++;
-			this.Pos[1]=0;
+			this.Pos[0]++
+			this.Pos[1]=0
 		}else{
-			this.Pos[1]++;
+			this.Pos[1]++
 		}
 		if (this.Str.length <= this.Pos[0]) {
 			this.Pos = [0,0]
 			post("done\n")
-			arguments.callee.task.cancel()
+			outlet(0,[this.keyname,0])
 		}
 	}
 }
-var font_tsk = new Task(testfunc)
-function testfunc(){
-	arguments.callee.task.interval = 300
-	post("hoge\n")
-}
-//font_tsk.repeat(-1)
 
 post("8x8font.js compiled.")

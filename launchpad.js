@@ -1,4 +1,4 @@
-var setting = "LP/setting.js"
+var setting = "setting.js"
 
 /*
 launchpad.js by K.Aoki(Prily - prhyzmica)
@@ -121,9 +121,9 @@ _LP.prototype = {
 	},
 	set : function(keyname,data) {
 		if (keyname in this.map.objList) {
-			post("ERR : invalid keyname "+keyname+" \n")
-		}else{
 			this.map.objList[keyname].set(data)
+		}else{
+			post("ERR : invalid keyname "+keyname+" \n")
 		}
 	}
 }
@@ -174,12 +174,17 @@ function ctl(){
 	if (velocity==127) LP.setPage(position-104)
 }
 function loadbang(){
-	//reset()
+	reset()
 }
 function reset(){
 	initialize()
 	LP.setPage(0)
 	post("LP setup done!\n")
+}
+function dump(){
+	for(var obj in LP.map.objList) {
+		post(obj)
+	}
 }
 
 

@@ -6,5 +6,6 @@ LP.add(1,"f1",fader,[112,-16,8],[16,51])
 LP.add(1,"f2",fader,[113,-16,8],[16,51])
 LP.add(2,"m1",matrix,[0,0,8,8],[0,3])
 LP.add(3,"md1",matrix_display,[0,0,8,8],[0,3])
+LP.add(4,"mes",message_display,0,[0,51])
 
-post("LPsetting.js included.\n")
+post("setting.js included.\n")
