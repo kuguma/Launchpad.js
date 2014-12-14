@@ -1,4 +1,4 @@
-var message_display = function(map,page,keyname,position,colormap) {
+var message_display = function(map,page,keyname,position,colormap,option) {
 	this.map = map
 	this.page = page
 	this.keyname = keyname
@@ -183,7 +183,7 @@ message_display.prototype = {
 		for (var r=0; r<8; r++){
 			for (var c=0; c<8; c++){
 				var pos = r*16+c
-				if (Page==this.page) outlet(1,[pos,this.colormap[0]])
+				if (Page==this.page) LP.out(1,[pos,this.colormap[0]])
 			}
 		}
 	},
@@ -204,7 +204,7 @@ message_display.prototype = {
 					this.B_Matrix[c][r] = 0
 					this.D_Matrix[c][r] = 0
 					var pos = r*16+c
-					if (Page==this.page) outlet(1,[pos,this.colormap[0]])
+					if (Page==this.page) LP.out(1,[pos,this.colormap[0]])
 				}
 			}
 		}
@@ -230,7 +230,7 @@ message_display.prototype = {
 			for (var c=0; c<8; c++){
 				if(this.B_Matrix[c][r]!==this.D_Matrix[c][r]) {
 					var pos = r*16+c;
-					if (Page==this.page) outlet(1,[pos,this.D_Matrix[c][r]])
+					if (Page==this.page) LP.out(1,[pos,this.D_Matrix[c][r]])
 				}
 			}
 		}
@@ -245,7 +245,7 @@ message_display.prototype = {
 		if (this.Str.length <= this.Pos[0]) {
 			this.Pos = [0,0]
 			post("done\n")
-			outlet(0,[this.keyname,0])
+			LP.out(0,[this.keyname,0])
 		}
 	}
 }
