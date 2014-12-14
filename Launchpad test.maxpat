@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 100.0, 81.0, 1228.0, 649.0 ],
+		"rect" : [ 100.0, 81.0, 822.0, 649.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -44,7 +44,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 1067.5, 285.5, 46.0, 48.0 ],
-					"presentation_rect" : [ 1068.5, 304.0, 0.0, 0.0 ],
 					"style" : "",
 					"text" : "2"
 				}
@@ -85,7 +84,6 @@
 					"outlettype" : [ "" ],
 					"parameter_enable" : 0,
 					"patching_rect" : [ 1028.0, 413.0, 20.0, 140.0 ],
-					"presentation_rect" : [ 1096.0, 425.5, 0.0, 0.0 ],
 					"style" : ""
 				}
 
@@ -100,7 +98,6 @@
 					"outlettype" : [ "" ],
 					"parameter_enable" : 0,
 					"patching_rect" : [ 979.0, 413.0, 20.0, 140.0 ],
-					"presentation_rect" : [ 994.0, 427.5, 0.0, 0.0 ],
 					"size" : 1.0,
 					"style" : ""
 				}
@@ -167,7 +164,6 @@
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
 					"patching_rect" : [ 888.0, 442.5, 50.0, 22.0 ],
-					"presentation_rect" : [ 890.0, 454.5, 0.0, 0.0 ],
 					"style" : ""
 				}
 
@@ -181,7 +177,6 @@
 					"outlettype" : [ "" ],
 					"parameter_enable" : 0,
 					"patching_rect" : [ 854.0, 283.5, 20.0, 140.0 ],
-					"presentation_rect" : [ 856.0, 295.5, 0.0, 0.0 ],
 					"style" : ""
 				}
 
@@ -209,7 +204,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 1063.5, 24.0, 46.0, 48.0 ],
-					"presentation_rect" : [ 932.5, 54.0, 0.0, 0.0 ],
 					"style" : "",
 					"text" : "1"
 				}
@@ -223,7 +217,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
 					"patching_rect" : [ 872.0, 152.5, 24.0, 24.0 ],
-					"presentation_rect" : [ 869.0, 197.0, 0.0, 0.0 ],
 					"style" : ""
 				}
 
@@ -236,7 +229,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
 					"patching_rect" : [ 842.0, 152.5, 24.0, 24.0 ],
-					"presentation_rect" : [ 835.0, 196.0, 0.0, 0.0 ],
 					"style" : ""
 				}
 
@@ -325,7 +317,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 653.5, 285.5, 46.0, 48.0 ],
-					"presentation_rect" : [ 655.5, 299.0, 0.0, 0.0 ],
 					"style" : "",
 					"text" : "3"
 				}
@@ -339,7 +330,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 653.5, 24.0, 46.0, 48.0 ],
-					"presentation_rect" : [ 93.5, 417.0, 0.0, 0.0 ],
 					"style" : "",
 					"text" : "4"
 				}
@@ -772,14 +762,14 @@
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "", "", "" ],
-					"patching_rect" : [ 28.0, 318.0, 90.0, 22.0 ],
+					"patching_rect" : [ 28.0, 318.0, 94.0, 22.0 ],
 					"saved_object_attributes" : 					{
-						"filename" : "launchpad.js",
+						"filename" : "Launchpad.js",
 						"parameter_enable" : 0
 					}
 ,
 					"style" : "",
-					"text" : "js launchpad.js"
+					"text" : "js Launchpad.js"
 				}
 
 			}
@@ -877,8 +867,8 @@
 , 			{
 				"box" : 				{
 					"angle" : 270.0,
-					"grad1" : [ 0.317647, 0.654902, 0.976471, 1.0 ],
-					"grad2" : [ 0.317647, 0.654902, 0.976471, 1.0 ],
+					"grad1" : [ 0.836576, 0.903148, 0.643029, 1.0 ],
+					"grad2" : [ 0.439216, 0.74902, 0.254902, 1.0 ],
 					"id" : "obj-40",
 					"maxclass" : "panel",
 					"mode" : 1,
@@ -893,15 +883,14 @@
 , 			{
 				"box" : 				{
 					"angle" : 270.0,
-					"grad1" : [ 0.317647, 0.654902, 0.976471, 1.0 ],
-					"grad2" : [ 0.317647, 0.654902, 0.976471, 1.0 ],
+					"grad1" : [ 0.836576, 0.903148, 0.643029, 1.0 ],
+					"grad2" : [ 0.439216, 0.74902, 0.254902, 1.0 ],
 					"id" : "obj-42",
 					"maxclass" : "panel",
 					"mode" : 1,
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 346.5, 276.0, 362.0, 304.0 ],
-					"presentation_rect" : [ 346.5, 280.0, 0.0, 0.0 ],
 					"proportion" : 0.39,
 					"style" : ""
 				}
@@ -910,15 +899,14 @@
 , 			{
 				"box" : 				{
 					"angle" : 270.0,
-					"grad1" : [ 0.317647, 0.654902, 0.976471, 1.0 ],
-					"grad2" : [ 0.317647, 0.654902, 0.976471, 1.0 ],
+					"grad1" : [ 0.836576, 0.903148, 0.643029, 1.0 ],
+					"grad2" : [ 0.439216, 0.74902, 0.254902, 1.0 ],
 					"id" : "obj-85",
 					"maxclass" : "panel",
 					"mode" : 1,
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 728.5, 15.0, 394.0, 233.0 ],
-					"presentation_rect" : [ 675.5, 30.0, 0.0, 0.0 ],
+					"patching_rect" : [ 727.5, 15.0, 394.0, 233.0 ],
 					"proportion" : 0.39,
 					"style" : ""
 				}
@@ -927,15 +915,14 @@
 , 			{
 				"box" : 				{
 					"angle" : 270.0,
-					"grad1" : [ 0.317647, 0.654902, 0.976471, 1.0 ],
-					"grad2" : [ 0.317647, 0.654902, 0.976471, 1.0 ],
+					"grad1" : [ 0.836576, 0.903148, 0.643029, 1.0 ],
+					"grad2" : [ 0.439216, 0.74902, 0.254902, 1.0 ],
 					"id" : "obj-106",
 					"maxclass" : "panel",
 					"mode" : 1,
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 728.5, 276.0, 394.0, 304.0 ],
-					"presentation_rect" : [ 730.5, 289.0, 0.0, 0.0 ],
+					"patching_rect" : [ 727.5, 276.0, 394.0, 304.0 ],
 					"proportion" : 0.39,
 					"style" : ""
 				}
@@ -944,15 +931,14 @@
 , 			{
 				"box" : 				{
 					"angle" : 270.0,
-					"grad1" : [ 0.870588, 0.415686, 0.062745, 1.0 ],
-					"grad2" : [ 0.870588, 0.415686, 0.062745, 1.0 ],
+					"grad1" : [ 0.997536, 0.883331, 0.611546, 1.0 ],
+					"grad2" : [ 0.952941, 0.564706, 0.098039, 1.0 ],
 					"id" : "obj-108",
 					"maxclass" : "panel",
 					"mode" : 1,
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 13.5, 116.0, 313.0, 464.0 ],
-					"presentation_rect" : [ 20.5, 407.0, 0.0, 0.0 ],
 					"proportion" : 0.39,
 					"style" : ""
 				}
@@ -1487,7 +1473,7 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "launchpad.js",
+				"name" : "Launchpad.js",
 				"bootpath" : "/Users/Prily/Dropbox/Develop/Max/Launchpad.js dev",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",
