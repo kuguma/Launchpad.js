@@ -51,10 +51,6 @@ _LP.prototype = {
 		LP.out(2, [0, 0]) //hard reset
 		
 		//pagetab lighting
-		for (var i = 0; i < 8; i++) {
-			LP.out(2, [0, 104 + i])
-		}
-		
 		LP.out(2, [50, 104 + Page])
 	
 		//flash
@@ -157,4 +153,3 @@ function dump() {
 
 
 post("launchpad.js compiled.\n")
-reset()

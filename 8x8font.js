@@ -9,8 +9,12 @@ var message_display = function(map,page,keyname,position,colormap,option) {
 	this.B_Matrix = new Array()
 	this.D_Matrix = new Array()
 	for (var i=0; i<8; i++){
-		this.B_Matrix[i] = [0,0,0,0,0,0,0,0]
-		this.D_Matrix[i] = [0,0,0,0,0,0,0,0]
+		this.B_Matrix[i] = new Array()
+		this.D_Matrix[i] = new Array()
+		for (var j=0; j<8; j++){
+			this.B_Matrix[i][j] = this.colormap[0]
+			this.D_Matrix[i][j] = this.colormap[0]
+		}
 	}
 }
 
@@ -174,7 +178,7 @@ message_display.prototype = {
 				var c2 = c-column
 				if (0<=r2 && r2<=7 && 0<=c2 && c2<=7) {
 					//double buffering
-					this.D_Matrix[c2][r2] = fmatrix[c][r] * this.colormap[1]
+					this.D_Matrix[c2][r2] = this.colormap[fmatrix[c][r]]
 				}
 			}
 		}
@@ -201,8 +205,8 @@ message_display.prototype = {
 			var r,c,pos
 			for (var r=0; r<8; r++){
 				for (var c=0; c<8; c++){
-					this.B_Matrix[c][r] = 0
-					this.D_Matrix[c][r] = 0
+					this.B_Matrix[c][r] = this.colormap[0]
+					this.D_Matrix[c][r] = this.colormap[0]
 					var pos = r*16+c
 					if (Page==this.page) LP.out(1,[pos,this.colormap[0]])
 				}
@@ -244,7 +248,7 @@ message_display.prototype = {
 		}
 		if (this.Str.length <= this.Pos[0]) {
 			this.Pos = [0,0]
-			post("done\n")
+			post("message_display done\n")
 			LP.out(0,[this.keyname,0])
 		}
 	}

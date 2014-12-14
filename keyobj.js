@@ -51,7 +51,6 @@ var toggle = function(map,page,keyname,position,colormap,option) {
 	this.colormap = colormap
 	this.data = 0
 	this.ignore_push = (function(){if(option){return (option.ignore_push||0)}else{return 0}})()
-	post(this.ignore_push)
 	map.objList[keyname] = this
 	map.posList[page][position] = this
 }
@@ -174,7 +173,52 @@ counter.prototype = {
 }
 
 //line_counter
-
+var line_counter = function(map,page,keyname,position,colormap,option) {
+	this.map = map
+	this.page = page
+	this.keyname = keyname
+	this.position = position
+	this.upper_leftc = position[0]
+	this.upper_leftr = position[1]
+	this.width = position[2]
+	this.height = position[3]
+	this.colormap = colormap
+	this.bufcolor = new Array(8)
+	this.data = 0
+	map.objList[keyname] = this
+}
+line_counter.prototype = {
+	flash : function() {
+		for (var i=0; i<this.width; i++) {
+			if (this.data==i) {
+				LP.out(0,[this.keyname,this.data]) //data
+				for (var r=0; r<this.height; r++) {
+					var pos = (r+this.upper_leftr)*16 + (i+this.upper_leftc)
+					this.bufcolor[r] = LP.getcolor(pos) //buf
+					LP.out(1,[pos,this.colormap]) //noteout
+				}
+			}
+		}
+	},
+	set : function(data){
+		if(Page==this.page) {
+			for (var r=0; r<this.height; r++) {
+				var pos = (r+this.upper_leftr)*16 + (this.data+this.upper_leftc)
+				if (LP.getcolor(pos)==this.colormap) {
+					LP.out(1,[pos,this.bufcolor[r]]) //noteout
+				}
+			}
+			this.data = data[0]
+			for (var r=0; r<this.height; r++) {
+				var pos = (r+this.upper_leftr)*16 + (this.data+this.upper_leftc)
+				this.bufcolor[r] = LP.getcolor(pos) //buf
+				LP.out(1,[pos,this.colormap]) //noteout
+			}
+		}else{
+			this.data = data[0]
+		}
+	}
+}
 
 
 
@@ -244,19 +288,23 @@ var matrix = function(map,page,keyname,position,colormap,option) {
 	this.page = page
 	this.keyname = keyname
 	this.position = position
+	this.upper_leftc = position[0]
+	this.upper_leftr = position[1]
+	this.width = position[2]
+	this.height = position[3]
 	this.colormap = colormap
 	this.data = []
 	this.ignore_push = (function(){if(option){return (option.ignore_push||0)}else{return 0}})()
 	
-	for (var r=0; r<position[2]; r++) {
-		for (var c=0; c<position[3]; c++) {
-			this.data[(position[0]+r)*16+(position[1]+c)] = {val:0, colmun:c, row:r}
+	for (var r=0; r<this.height; r++) {
+		for (var c=0; c<this.width; c++) {
+			this.data[(this.upper_leftr+r)*16+(this.upper_leftc+c)] = {val:0, colmun:c, row:r}
 		}
 	}
 	map.objList[keyname] = this
-	for (var r=0; r<position[2]; r++) {
-		for (var c=0; c<position[3]; c++) {
-			map.posList[page][(position[0]+r)*16+(position[1]+c)] = this
+	for (var r=0; r<this.height; r++) {
+		for (var c=0; c<this.width; c++) {
+			map.posList[page][(this.upper_leftr+r)*16+(this.upper_leftc+c)] = this
 		}
 	}
 }
@@ -283,7 +331,7 @@ matrix.prototype = {
 	},
 	set : function(data) {
 		//data = [colmun,row,data]
-		var pos = (this.position[0]+data[1])*16+(this.position[1]+data[0])
+		var pos = (this.upper_leftr+data[1])*16+(this.upper_leftc+data[0])
 		if(Page==this.page) {
 			if (this.data[pos].val == 0) this.data[pos].val = 1
 			else this.data[pos].val = 0
